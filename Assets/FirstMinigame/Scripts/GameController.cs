@@ -17,13 +17,11 @@ public class GameController : MonoBehaviour
     private string selectedAnswer;
     [SerializeField] private Button continueButton;
     [SerializeField] private Button checkButton;
-    private Button ReturnToMainMenu;
+    [SerializeField] private Button ReturnToMainMenu;
     private void Start()
     {
-        //continueButton = GameObject.FindWithTag("ContinueButton").GetComponent<Button>();
-        //checkButton = GameObject.FindWithTag("CheckAnswerButton").GetComponent<Button>();
-        //ReturnToMainMenu = GameObject.FindWithTag("ReturnToMainMenuButton").GetComponent<Button>();
         checkButton.interactable = false;
+        ReturnToMainMenu.gameObject.SetActive(false);
         LoadExercise(currentExercise);
     }
 
@@ -75,13 +73,10 @@ public class GameController : MonoBehaviour
         checkButton.interactable = false;
         continueButton.gameObject.SetActive(false);
         Debug.Log($"Loading exercise #{exercise.id}. Correct Answer: {exercise.correctAnswer.note}");
-
-
     }
 
     public void CheckAnswer()
     {
-
         Exercise exercise = exercises[currentExercise];
 
         if (selectedAnswer == exercise.correctAnswer.note)
@@ -89,6 +84,7 @@ public class GameController : MonoBehaviour
             Debug.Log("Correct answer!");
             checkButton.gameObject.SetActive(false);
             continueButton.gameObject.SetActive(true);
+            audioSource.Stop();
         }
         else
         {
@@ -101,6 +97,7 @@ public class GameController : MonoBehaviour
         currentExercise++;
         if (currentExercise < exercises.Count)
         {
+            Debug.Log($"Next exercise: {currentExercise}");
             continueButton.gameObject.SetActive(false);
             checkButton.gameObject.SetActive(true);
             checkButton.interactable = false;
@@ -110,7 +107,9 @@ public class GameController : MonoBehaviour
         else
         {
             Debug.Log("No more exercises");
-            
+            continueButton.gameObject.SetActive(false);
+            ReturnToMainMenu.gameObject.SetActive(true);
+
         }
     }
 

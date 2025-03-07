@@ -711,12 +711,12 @@ GameObject:
   - component: {fileID: 518314947}
   - component: {fileID: 518314950}
   m_Layer: 5
-  m_Name: NextLevelButton
+  m_Name: ReturnToMainMenuButton
   m_TagString: ReturnToMainMenuButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &518314945
 RectTransform:
   m_ObjectHideFlags: 0
@@ -734,8 +734,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -188}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 5.1364, y: -178.6612}
+  m_SizeDelta: {x: 170.2728, y: 48.6777}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &518314947
 MonoBehaviour:
@@ -855,9 +855,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6091d532d8e152243bb872cf24df2522, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneName: Level2
+  sceneName: LevelMenuScene
   levelName: {fileID: 1549282602}
-  levelNameText: Continuar
+  levelNameText: Regresar a Menu
 --- !u!1 &592911003
 GameObject:
   m_ObjectHideFlags: 0
@@ -1398,6 +1398,32 @@ MonoBehaviour:
       sound: {fileID: 8300000, guid: 2795e0ae2e6848446803e2ce2a31459f, type: 3}
     - text: Fa
       sound: {fileID: 8300000, guid: 575e153a87bf54d42bae0555f9f4938a, type: 3}
+  - id: 1
+    correctAnswer:
+      note: Re
+      sound: {fileID: 8300000, guid: 2795e0ae2e6848446803e2ce2a31459f, type: 3}
+    options:
+    - text: Do
+      sound: {fileID: 8300000, guid: 2795e0ae2e6848446803e2ce2a31459f, type: 3}
+    - text: Re
+      sound: {fileID: 8300000, guid: 575e153a87bf54d42bae0555f9f4938a, type: 3}
+    - text: Mi
+      sound: {fileID: 8300000, guid: 2795e0ae2e6848446803e2ce2a31459f, type: 3}
+    - text: Fa
+      sound: {fileID: 8300000, guid: 575e153a87bf54d42bae0555f9f4938a, type: 3}
+  - id: 2
+    correctAnswer:
+      note: Mi
+      sound: {fileID: 8300000, guid: 2795e0ae2e6848446803e2ce2a31459f, type: 3}
+    options:
+    - text: Do
+      sound: {fileID: 8300000, guid: 2795e0ae2e6848446803e2ce2a31459f, type: 3}
+    - text: Re
+      sound: {fileID: 8300000, guid: 575e153a87bf54d42bae0555f9f4938a, type: 3}
+    - text: Mi
+      sound: {fileID: 8300000, guid: 2795e0ae2e6848446803e2ce2a31459f, type: 3}
+    - text: Fa
+      sound: {fileID: 8300000, guid: 575e153a87bf54d42bae0555f9f4938a, type: 3}
   playNoteButton: {fileID: 729283246}
   optionButtons:
   - {fileID: 795149821}
@@ -1412,6 +1438,7 @@ MonoBehaviour:
   audioSource: {fileID: 1451034340}
   continueButton: {fileID: 1345550341}
   checkButton: {fileID: 655707197}
+  ReturnToMainMenu: {fileID: 518314947}
 --- !u!4 &850904817
 Transform:
   m_ObjectHideFlags: 0
@@ -2688,7 +2715,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Enviar
+  m_text: Regresar a Menu
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
