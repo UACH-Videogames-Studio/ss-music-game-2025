@@ -19,7 +19,8 @@ public class GameController : MonoBehaviour
     private string selectedAnswer;
     [SerializeField] private Button continueButton;
     [SerializeField] private Button checkButton;
-    [SerializeField] private Button ReturnToMainMenu;
+    [SerializeField] private Button returnToMainMenu;
+   // [SerializeField] private Button tryAgainButton;
 
     [SerializeField] private GameObject correctPanel;
     [SerializeField] private GameObject incorrectPanel;
@@ -27,7 +28,7 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         checkButton.interactable = false;
-        ReturnToMainMenu.gameObject.SetActive(false);
+        returnToMainMenu.gameObject.SetActive(false);
         LoadExercise(currentExercise);
     }
 
@@ -100,6 +101,9 @@ public class GameController : MonoBehaviour
         else
         {
             Debug.Log("Incorrect answer!");
+            audioSource.Stop();
+            incorrectPanel.SetActive(true);
+
         }
     }
 
@@ -128,7 +132,7 @@ public class GameController : MonoBehaviour
         {
             Debug.Log("No more exercises");
             continueButton.gameObject.SetActive(false);
-            ReturnToMainMenu.gameObject.SetActive(true);
+            returnToMainMenu.gameObject.SetActive(true);
 
         }
     }
@@ -156,6 +160,22 @@ public class GameController : MonoBehaviour
             audioSource.Stop();
             audioSource.Play();
         }
+    }
+
+    public void Restart()
+    {
+        currentExercise = 0;
+        StartCoroutine(DeactivateTryAgainButton());
+        LoadExercise(currentExercise);
+    }
+
+    private IEnumerator DeactivateTryAgainButton()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        raycaster.enabled = false;
+        yield return new WaitForSeconds(0.4f);
+        incorrectPanel.SetActive(false);
+        raycaster.enabled = true;
     }
 
 }
