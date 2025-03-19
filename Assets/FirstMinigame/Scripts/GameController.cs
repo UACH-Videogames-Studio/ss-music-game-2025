@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -17,11 +19,16 @@ public class GameController : MonoBehaviour
     private string selectedAnswer;
     [SerializeField] private Button continueButton;
     [SerializeField] private Button checkButton;
-    [SerializeField] private Button ReturnToMainMenu;
+    [SerializeField] private Button returnToMainMenu;
+   // [SerializeField] private Button tryAgainButton;
+
+    [SerializeField] private GameObject correctPanel;
+    [SerializeField] private GameObject incorrectPanel;
+    [SerializeField] private GraphicRaycaster raycaster;
     private void Start()
     {
         checkButton.interactable = false;
-        ReturnToMainMenu.gameObject.SetActive(false);
+        returnToMainMenu.gameObject.SetActive(false);
         LoadExercise(currentExercise);
     }
 
@@ -71,7 +78,7 @@ public class GameController : MonoBehaviour
         }
 
         checkButton.interactable = false;
-        continueButton.gameObject.SetActive(false);
+        //continueButton.gameObject.SetActive(false);
         Debug.Log($"Loading exercise #{exercise.id}. Correct Answer: {exercise.correctAnswer.note}");
     }
 
@@ -82,14 +89,34 @@ public class GameController : MonoBehaviour
         if (selectedAnswer == exercise.correctAnswer.note)
         {
             Debug.Log("Correct answer!");
-            checkButton.gameObject.SetActive(false);
-            continueButton.gameObject.SetActive(true);
-            audioSource.Stop();
+            EventSystem.current.SetSelectedGameObject(null);
+            //Cursor.visible = false;
+            //Cursor.lockState = CursorLockMode.Locked;
+            StartCoroutine(DeactivateCheckButton());
+            //checkButton.gameObject.SetActive(false);
+            //correctPanel.SetActive(true);
+            //continueButton.gameObject.SetActive(true);
+            //audioSource.Stop();
         }
         else
         {
             Debug.Log("Incorrect answer!");
+            audioSource.Stop();
+            incorrectPanel.SetActive(true);
+
         }
+    }
+
+    private IEnumerator DeactivateCheckButton()
+    {
+        raycaster.enabled = false;
+        yield return new WaitForSeconds(0.4f);
+        checkButton.gameObject.SetActive(false);
+        correctPanel.SetActive(true);
+        continueButton.gameObject.SetActive(true);
+        audioSource.Stop();
+        raycaster.enabled = true;
+        
     }
 
     public void ContinueToNextExercise()
@@ -97,20 +124,32 @@ public class GameController : MonoBehaviour
         currentExercise++;
         if (currentExercise < exercises.Count)
         {
-            Debug.Log($"Next exercise: {currentExercise}");
-            continueButton.gameObject.SetActive(false);
-            checkButton.gameObject.SetActive(true);
-            checkButton.interactable = false;
-            selectedAnswer = null;
+            EventSystem.current.SetSelectedGameObject(null);
+            StartCoroutine(DeactivateContinueButton());
             LoadExercise(currentExercise);
         }
         else
         {
             Debug.Log("No more exercises");
             continueButton.gameObject.SetActive(false);
-            ReturnToMainMenu.gameObject.SetActive(true);
+            returnToMainMenu.gameObject.SetActive(true);
 
         }
+    }
+
+    private IEnumerator DeactivateContinueButton()
+    {
+        raycaster.enabled = false;
+        yield return new WaitForSeconds(0.4f);
+        Debug.Log($"Next exercise: {currentExercise}");
+        Debug.Log("Deactivating continue burron");
+        correctPanel.SetActive(false);
+        continueButton.gameObject.SetActive(false);
+        checkButton.gameObject.SetActive(true);
+        checkButton.interactable = false;
+        selectedAnswer = null;
+        raycaster.enabled = true;
+
     }
 
     private void PlaySound(AudioClip clip)
@@ -121,6 +160,22 @@ public class GameController : MonoBehaviour
             audioSource.Stop();
             audioSource.Play();
         }
+    }
+
+    public void Restart()
+    {
+        currentExercise = 0;
+        StartCoroutine(DeactivateTryAgainButton());
+        LoadExercise(currentExercise);
+    }
+
+    private IEnumerator DeactivateTryAgainButton()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        raycaster.enabled = false;
+        yield return new WaitForSeconds(0.4f);
+        incorrectPanel.SetActive(false);
+        raycaster.enabled = true;
     }
 
 }
