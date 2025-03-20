@@ -1,0 +1,67 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class DialogueManager : MonoBehaviour
+{
+    [SerializeField] private DialogueUI dialogueUI;
+    [SerializeField] private float typingSpeed = 0.05f;
+    [SerializeField] private AudioSource typingAudioSource;
+    public static DialogueManager Instance { get; private set; }
+    private Queue<DialogueTurn> dialogueTurnsQueue;
+
+    public bool IsDialogueInProgress { get; private set; } = false;
+
+    private void Awake()
+    {
+        Instance = this;
+        dialogueUI.HideDialogueBox();
+    }
+
+    public void StartDialogue(DialogueRoundSO dialogue)
+    {
+        if (IsDialogueInProgress)
+        {
+            Debug.Log($"Dialogue is already in progress");
+            return;
+        }
+        IsDialogueInProgress = true;
+        dialogueTurnsQueue = new Queue<DialogueTurn>(dialogue.DialogueTurnsList);
+        StartCoroutine(DialogueCoroutine());
+
+    }
+
+    private IEnumerator DialogueCoroutine()
+    {
+        dialogueUI.ShowDialogueBox();
+        while ( dialogueTurnsQueue.Count > 0)
+        {
+            var CurrentTurn = dialogueTurnsQueue.Dequeue();
+            dialogueUI.SetCharacterInfo(CurrentTurn.Character);
+            dialogueUI.ClearDialogueArea();
+            yield return StartCoroutine(TypeSentence(CurrentTurn));
+            yield return new WaitUntil(() => Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return));
+            yield return null;
+        }
+        
+        dialogueUI.HideDialogueBox();
+        IsDialogueInProgress = false;
+    }
+
+    private IEnumerator TypeSentence(DialogueTurn dialogueTurn)
+    {
+        var typingWaitSeconds = new WaitForSeconds(typingSpeed);
+
+        foreach (char letter in dialogueTurn.DialogueLine.ToCharArray())
+        {
+            dialogueUI.AppendToDialogueArea(letter);
+            if (!char.IsWhiteSpace(letter))
+            {
+                typingAudioSource.Play();
+            }
+            yield return typingWaitSeconds;
+        }
+    }
+
+
+}
