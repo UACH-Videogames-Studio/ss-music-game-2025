@@ -5,16 +5,23 @@ using UnityEngine.InputSystem;
 
 public class DialogueManager : MonoBehaviour
 {
+    public static DialogueManager Instance { get; private set; }
+
+    [Header("UI $ Typing")]
     [SerializeField] private DialogueUI dialogueUI;
     [SerializeField] private float typingSpeed = 0.05f;
     [SerializeField] private AudioSource typingAudioSource;
-    public static DialogueManager Instance { get; private set; }
+
+    [Header("InputAction")]
+    [SerializeField] private InputActionReference nextDialogueActionRef;
+
     private Queue<DialogueTurn> dialogueTurnsQueue;
     private string currentTutorialKey;
-
+    private bool skipTyping;
     public bool IsDialogueInProgress { get; private set; } = false;
+    
 
-    [SerializeField] private InputActionReference nextDialogueActionRef;
+    
 
     private void Awake()
     {
@@ -62,8 +69,10 @@ public class DialogueManager : MonoBehaviour
             var CurrentTurn = dialogueTurnsQueue.Dequeue();
             dialogueUI.SetCharacterInfo(CurrentTurn.Character);
             dialogueUI.ClearDialogueArea();
-            yield return StartCoroutine(TypeSentence(CurrentTurn));
+
+            yield return StartCoroutine(TypeSentence(CurrentTurn.DialogueLine));
             //yield return new WaitUntil(() => Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return));
+            yield return new WaitUntil(() => !nextDialogueActionRef.action.IsPressed());
             yield return new WaitUntil(() => nextDialogueActionRef.action.triggered);
             yield return null;
         }
@@ -80,20 +89,58 @@ public class DialogueManager : MonoBehaviour
         currentTutorialKey = null;
     }
 
-    private IEnumerator TypeSentence(DialogueTurn dialogueTurn)
+    private IEnumerator TypeSentence(string sentence)
     {
-        var typingWaitSeconds = new WaitForSeconds(typingSpeed);
+        dialogueUI.ClearDialogueArea();
+        skipTyping = false;
 
-        foreach (char letter in dialogueTurn.DialogueLine.ToCharArray())
+        for (int i = 0; i < sentence.Length; i++)
         {
-            dialogueUI.AppendToDialogueArea(letter);
-            if (!char.IsWhiteSpace(letter))
+            if (nextDialogueActionRef.action.triggered)
             {
-                typingAudioSource.Play();
+                skipTyping = true;
             }
-            yield return typingWaitSeconds;
+            if (skipTyping)
+            {
+                dialogueUI.AppendToDialogueArea(sentence.Substring(i));
+                yield break;
+            }
+
+            char c = sentence[i];
+            dialogueUI.AppendToDialogueArea(c);
+            if (!char.IsWhiteSpace(c) && typingAudioSource != null)
+                typingAudioSource.Play();
+
+            float timer = 0f;
+            while (timer < typingSpeed)
+            {
+                if (nextDialogueActionRef.action.triggered)
+                {
+                    skipTyping = true;
+                    dialogueUI.AppendToDialogueArea(sentence.Substring(i + 1));
+                    yield break;
+                }
+                timer += Time.deltaTime;
+                yield return null;
+            }
         }
     }
+
+
+    //private IEnumerator TypeSentence(DialogueTurn dialogueTurn)
+    //{
+    //    var typingWaitSeconds = new WaitForSeconds(typingSpeed);
+
+    //    foreach (char letter in dialogueTurn.DialogueLine.ToCharArray())
+    //    {
+    //        dialogueUI.AppendToDialogueArea(letter);
+    //        if (!char.IsWhiteSpace(letter))
+    //        {
+    //            typingAudioSource.Play();
+    //        }
+    //        yield return typingWaitSeconds;
+    //    }
+    //}
 
 
 }

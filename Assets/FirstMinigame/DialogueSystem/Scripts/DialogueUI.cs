@@ -43,4 +43,9 @@ public class DialogueUI : MonoBehaviour
     {
         dialogueArea.text += letter;
     }
+
+    public void AppendToDialogueArea(string text)
+    {
+        dialogueArea.text += text;
+    }
 }
