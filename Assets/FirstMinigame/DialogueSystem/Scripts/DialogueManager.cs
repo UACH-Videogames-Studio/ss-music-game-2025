@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -13,10 +14,28 @@ public class DialogueManager : MonoBehaviour
 
     public bool IsDialogueInProgress { get; private set; } = false;
 
+    [SerializeField] private InputActionReference nextDialogueActionRef;
+
     private void Awake()
     {
         Instance = this;
         dialogueUI.HideDialogueBox();
+    }
+
+    private void OnEnable()
+    {
+        if (nextDialogueActionRef != null)
+        {
+            nextDialogueActionRef.action.Enable();
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (nextDialogueActionRef != null)
+        {
+            nextDialogueActionRef.action.Disable();
+        }
     }
 
     public void StartDialogue(DialogueRoundSO dialogue, string tutorialKey = null)
@@ -44,7 +63,8 @@ public class DialogueManager : MonoBehaviour
             dialogueUI.SetCharacterInfo(CurrentTurn.Character);
             dialogueUI.ClearDialogueArea();
             yield return StartCoroutine(TypeSentence(CurrentTurn));
-            yield return new WaitUntil(() => Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return));
+            //yield return new WaitUntil(() => Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return));
+            yield return new WaitUntil(() => nextDialogueActionRef.action.triggered);
             yield return null;
         }
         

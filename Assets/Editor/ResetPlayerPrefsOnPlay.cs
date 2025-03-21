@@ -3,6 +3,8 @@ using UnityEditor;
 using UnityEngine;
 
 [InitializeOnLoad]
+//BORRAR EN PRODUCCION
+//BORRAAAAAR
 public static class ResetPlayerPrefsOnPlay
 {
     static ResetPlayerPrefsOnPlay()
@@ -13,7 +15,8 @@ public static class ResetPlayerPrefsOnPlay
     {
         if (state == PlayModeStateChange.ExitingEditMode)
         {
-            PlayerPrefs.DeleteKey("UnlockedLevels"); 
+            //PlayerPrefs.DeleteKey("UnlockedLevels"); 
+            PlayerPrefs.DeleteAll();
             Debug.Log("PlayerPrefs's Key UnlockedLevels has been deleted");
         }
     }

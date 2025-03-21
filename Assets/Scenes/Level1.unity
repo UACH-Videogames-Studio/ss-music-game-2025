@@ -750,7 +750,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogue: {fileID: 11400000, guid: 4e440b45818c7cb46922f452932ee83f, type: 2}
-  playerPrefsKey: HasShownTutorialLevel1
 --- !u!4 &447232198
 Transform:
   m_ObjectHideFlags: 0
@@ -3808,6 +3807,7 @@ MonoBehaviour:
   dialogueUI: {fileID: 1329912772}
   typingSpeed: 0.05
   typingAudioSource: {fileID: 1886488656}
+  nextDialogueActionRef: {fileID: -201683109692699443, guid: 1db2a2043bd0d854d83eed44e949dce4, type: 3}
 --- !u!4 &1886488655
 Transform:
   m_ObjectHideFlags: 0
