@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Tamara
   m_EditorClassIdentifier: 
   characterName: Tamara
-  profilePhoto: {fileID: -8711014428498738280, guid: e2cf528ba5f23854a974376aaa166fe8, type: 3}
+  profilePhoto: {fileID: -8711014428498738280, guid: 8fc05d468294e704bace59aad2d5c7d2, type: 3}
