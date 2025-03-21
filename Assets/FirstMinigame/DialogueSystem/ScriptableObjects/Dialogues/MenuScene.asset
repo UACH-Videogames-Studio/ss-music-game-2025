@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2826eb3edf706d7429d637cb0d2889ac, type: 3}
-  m_Name: Test
+  m_Name: MenuScene
   m_EditorClassIdentifier: 
   dialogueTurnsList:
   - Character: {fileID: 11400000, guid: a4d6fb36a260930498368cf16d89b3b5, type: 2}
-    dialogueLine: Hola, mi nombre es Tamara, y les ensenare el primer juego
+    dialogueLine: Hola!
   - Character: {fileID: 11400000, guid: a4d6fb36a260930498368cf16d89b3b5, type: 2}
-    dialogueLine: En este minijuego lograran adivinar la nota que esta sonando
+    dialogueLine: Bienvenido a nuestro juego musical
   - Character: {fileID: 11400000, guid: a4d6fb36a260930498368cf16d89b3b5, type: 2}
-    dialogueLine: Confio en ustedes!!
+    dialogueLine: Aqui iras desbloqueando minijuegos conforme avances en tu progreso

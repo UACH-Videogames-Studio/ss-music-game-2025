@@ -9,6 +9,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private AudioSource typingAudioSource;
     public static DialogueManager Instance { get; private set; }
     private Queue<DialogueTurn> dialogueTurnsQueue;
+    private string currentTutorialKey;
 
     public bool IsDialogueInProgress { get; private set; } = false;
 
@@ -18,13 +19,16 @@ public class DialogueManager : MonoBehaviour
         dialogueUI.HideDialogueBox();
     }
 
-    public void StartDialogue(DialogueRoundSO dialogue)
+    public void StartDialogue(DialogueRoundSO dialogue, string tutorialKey = null)
     {
         if (IsDialogueInProgress)
         {
             Debug.Log($"Dialogue is already in progress");
             return;
         }
+
+        currentTutorialKey = tutorialKey;
+
         IsDialogueInProgress = true;
         dialogueTurnsQueue = new Queue<DialogueTurn>(dialogue.DialogueTurnsList);
         StartCoroutine(DialogueCoroutine());
@@ -46,6 +50,14 @@ public class DialogueManager : MonoBehaviour
         
         dialogueUI.HideDialogueBox();
         IsDialogueInProgress = false;
+
+        if (!string.IsNullOrEmpty(currentTutorialKey))
+        {
+            PlayerPrefs.SetInt(currentTutorialKey, 1);
+            PlayerPrefs.Save();
+        }
+
+        currentTutorialKey = null;
     }
 
     private IEnumerator TypeSentence(DialogueTurn dialogueTurn)
